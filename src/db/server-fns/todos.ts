@@ -7,7 +7,7 @@ import { z } from "zod/v4";
 import { eq } from "drizzle-orm";
 
 export const insertTodoFn = createServerFn({ method: "POST" })
-	.validator((data: unknown) =>
+	.inputValidator((data: unknown) =>
 		todoInsertSchema.parse(parseDates(data as Record<string, unknown>)),
 	)
 	.handler(async ({ data }) => {
@@ -25,7 +25,7 @@ const updatePayloadSchema = z.object({
 });
 
 export const updateTodoFn = createServerFn({ method: "POST" })
-	.validator((data: unknown) => updatePayloadSchema.parse(data))
+	.inputValidator((data: unknown) => updatePayloadSchema.parse(data))
 	.handler(async ({ data }) => {
 		const { id, changes } = data;
 		const parsed = parseDates({
@@ -43,7 +43,7 @@ export const updateTodoFn = createServerFn({ method: "POST" })
 const deletePayloadSchema = z.object({ id: z.string().uuid() });
 
 export const deleteTodoFn = createServerFn({ method: "POST" })
-	.validator((data: unknown) => deletePayloadSchema.parse(data))
+	.inputValidator((data: unknown) => deletePayloadSchema.parse(data))
 	.handler(async ({ data }) => {
 		let txid = 0;
 		await db.transaction(async (tx) => {
