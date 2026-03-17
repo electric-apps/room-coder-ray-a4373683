@@ -7,7 +7,7 @@ import {
 import { Theme, Container, Heading, Text, Flex } from '@radix-ui/themes'
 
 import { Header } from '../components/Header'
-import { ThemeProvider } from '../contexts/ThemeContext'
+import { ThemeProvider, useTheme } from '../contexts/ThemeContext'
 
 import radixCss from '@radix-ui/themes/styles.css?url'
 import interCss from '@fontsource/inter/latin.css?url'
@@ -58,6 +58,22 @@ function NotFound() {
   )
 }
 
+function ThemedShell() {
+  const { darkMode } = useTheme()
+  return (
+    <Theme
+      accentColor="violet"
+      grayColor="mauve"
+      radius="medium"
+      panelBackground="translucent"
+      appearance={darkMode ? 'dark' : 'light'}
+    >
+      <Header />
+      <Outlet />
+    </Theme>
+  )
+}
+
 function RootComponent() {
   return (
     <html lang="en">
@@ -65,12 +81,9 @@ function RootComponent() {
         <HeadContent />
       </head>
       <body>
-        <Theme accentColor="violet" grayColor="mauve" radius="medium" panelBackground="translucent">
-          <ThemeProvider>
-            <Header />
-            <Outlet />
-          </ThemeProvider>
-        </Theme>
+        <ThemeProvider>
+          <ThemedShell />
+        </ThemeProvider>
         <Scripts />
       </body>
     </html>
